@@ -9,8 +9,9 @@ import theme from "./theme";
 
 import Loader from "./components/Loader";
 import SelectInput from "./components/SelectInput";
+import CustomTable from "./components/Table";
 
-import { selectNames } from "./helpers";
+import { selectNames, fetchAllPlannings } from "./helpers";
 
 const styles = (theme) => ({
   layout: {
@@ -19,7 +20,7 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     fontSize: "calc(10px + 2vmin)",
-    background: "linear-gradient(90deg, #dec9ee, #ffffff)",
+    background: "linear-gradient(10deg, #aeadadf5, #ffffff)",
   },
   row: {
     width: "100%",
@@ -29,6 +30,11 @@ const styles = (theme) => ({
   },
   spaceBetween: {
     justifyContent: "space-between",
+  },
+  notifier: {
+    textAlign: "center",
+    marginTop: "15%",
+    color: "#424242",
   },
 });
 
@@ -40,22 +46,65 @@ class App extends Component {
     demand: "",
     supply: "",
     planningYears: [],
+    errorMessage: "",
   };
 
-  handleChange = (name) => {};
-  componentDidMount = () => {};
+  handleChange = (name) => (event) => {
+    const { value } = event.target;
+    if (this.state[name] === value) return;
+
+    if (name === "plan")
+      return this.setState({ [name]: value, demand: "", supply: "" });
+
+    this.setState({ [name]: value });
+  };
+
+  componentDidMount = () => {
+    fetchAllPlannings()
+      .then((res) => {
+        if (res.length === 0) return this.setState({ loading: false });
+
+        this.setState({
+          plannings: res,
+          loading: false,
+          planningsYears: res.map(({ planningName }) =>
+            planningName.match(/\d+/g).map(Number),
+          ),
+        });
+        this.handleChange(selectNames.plan.objName)({
+          target: { value: res[0]._id },
+        });
+      })
+      .catch((err) =>
+        this.setState({
+          errorMessage: err.message || "Error on fetching tables data",
+          loading: false,
+        }),
+      );
+  };
 
   render() {
     const {
       loading,
       plan,
-      plans,
+      plannings,
       demand,
-      demands,
       supply,
-      supplies,
+      errorMessage,
     } = this.state;
     const { classes } = this.props;
+
+    const plans = plannings.map(({ _id, planningName }) => ({
+      id: _id,
+      name: planningName,
+    }));
+
+    const {
+      planningName: name,
+      planningDemand: demands,
+      planningSupply: supplies,
+    } = plan && plannings.find(({ _id }) => _id === plan);
+
     return (
       <MuiThemeProvider theme={theme}>
         <Grid className={`${classes.layout}`}>
@@ -69,7 +118,7 @@ class App extends Component {
                   field={selectNames.plan.objName}
                   handleChange={this.handleChange}
                   labelWidth={105}
-                  value={plan || "2 years"}
+                  value={plan}
                   data={plans || [{ name: "No data..." }]}
                 ></SelectInput>
               </Grid>
@@ -91,6 +140,15 @@ class App extends Component {
                   data={supplies || [{ tableName: "No data..." }]}
                 />
               </Grid>
+              {!plan && !errorMessage ? (
+                <Typography variant="h5" className={classes.notifier}>
+                  Please, choose a table
+                </Typography>
+              ) : (
+                <Fragment>
+                  <CustomTable></CustomTable>
+                </Fragment>
+              )}
               <Grid className={classes.row}></Grid>
             </Grid>
           )}
