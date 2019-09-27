@@ -20,6 +20,7 @@ const styles = (theme) => ({
   },
   table: {
     minWidth: 650,
+    minHeight: 170,
   },
   relative: {
     position: "relative",
@@ -67,23 +68,25 @@ class CustomTable extends Component {
     const { classes, PD, PS } = this.props;
 
     const pdLevelObj =
-      levelName && PD.find(({ levelName: LN }) => LN === levelName);
+      levelName && PD && PD.find(({ levelName: LN }) => LN === levelName);
     const psLevelObj =
-      levelName && PS.find(({ levelName: LN }) => LN === levelName);
+      levelName && PS && PS.find(({ levelName: LN }) => LN === levelName);
 
-    const pdSet = Object.values(pdLevelObj).filter((val) =>
-      Number.isInteger(val),
-    );
-    const psSet = Object.values(psLevelObj).filter((val) =>
-      Number.isInteger(val),
-    );
+    const pdSet =
+      pdLevelObj &&
+      Object.values(pdLevelObj).filter((val) => Number.isInteger(val));
+    const psSet =
+      psLevelObj &&
+      Object.values(psLevelObj).filter((val) => Number.isInteger(val));
 
     console.log("pldLevelObj", pdSet);
     console.log("plsLevelObj", psSet);
 
     const setsDiff = [];
-    for (let i = 0; i < Math.min(pdSet.length, psSet.length); i++) {
-      setsDiff.push(pdSet[i] - psSet[i]);
+    if (psSet && pdSet) {
+      for (let i = 0; i < Math.min(pdSet.length, psSet.length); i++) {
+        setsDiff.push(pdSet[i] - psSet[i]);
+      }
     }
 
     return (
@@ -99,22 +102,24 @@ class CustomTable extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {pdSet && pdSet.length && psSet && psSet.length ? (
-              <Fragment>
+            <Fragment>
+              {pdSet && pdSet.length ? (
                 <TableRow>
                   <TableCell className={classes.alignRight}>Demand</TableCell>
                   {pdSet.map((pld, i) => (
                     <TableCell key={`${pld}&${i}`}>{pld}</TableCell>
                   ))}
                 </TableRow>
+              ) : null}
+              {psSet && psSet.length ? (
                 <TableRow>
                   <TableCell className={classes.alignRight}>Supply</TableCell>
                   {psSet.map((pld, i) => (
                     <TableCell key={`${pld}&${i}`}>{pld}</TableCell>
                   ))}
                 </TableRow>
-              </Fragment>
-            ) : null}
+              ) : null}
+            </Fragment>
             <TableRow className={classes.highlight}>
               <TableCell className={classes.relative}>
                 <SimpleSelectInput

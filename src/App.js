@@ -162,7 +162,7 @@ class App extends Component {
                 </Typography>
               ) : (
                 <Fragment>
-                  {plan && PD && PS ? (
+                  {plan && (PD || PS) ? (
                     <CustomTable
                       planningName={planningName}
                       PD={PD}
