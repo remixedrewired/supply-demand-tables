@@ -23,13 +23,13 @@ export default [
         planningLevels: [
           {
             levelName: "Software Developing",
-            FTE_2019: 400,
-            FTE_2020: 400,
+            FTE_2019: 410,
+            FTE_2020: 420,
           },
           {
             levelName: "IT consulting",
-            FTE_2019: 400,
-            FTE_2020: 400,
+            FTE_2019: 430,
+            FTE_2020: 440,
           },
         ],
       },

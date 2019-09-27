@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import {
   Grid,
   Table,
@@ -9,6 +9,8 @@ import {
   Paper,
   withStyles,
 } from "@material-ui/core";
+
+import SimpleSelectInput from "../SimpleSelectInput";
 
 const styles = (theme) => ({
   root: {
@@ -32,8 +34,58 @@ const styles = (theme) => ({
 });
 
 class CustomTable extends Component {
+  state = {
+    levelName: "",
+    levelNames: [],
+    planningYears: [],
+  };
+
+  componentDidMount = () => {
+    const { PD, PS, planningName } = this.props;
+
+    const levelNames = PD.map(({ levelName }) => levelName);
+
+    const keys = PD.map((obj) => Object.keys(obj));
+    const planningYears = keys[0]
+      .filter((rawKey) => rawKey.match(/FTE/g))
+      .map((key) => key.split("_").join(" "));
+
+    this.setState({
+      levelName: levelNames[0],
+      levelNames,
+      planningYears,
+    });
+  };
+
+  handleSelectChange = (event) => {
+    console.log(event);
+    this.setState({ levelName: event.target.value });
+  };
+
   render() {
-    const { classes, planningYears } = this.props;
+    const { levelName, levelNames, planningYears } = this.state;
+    const { classes, PD, PS } = this.props;
+
+    const pdLevelObj =
+      levelName && PD.find(({ levelName: LN }) => LN === levelName);
+    const psLevelObj =
+      levelName && PS.find(({ levelName: LN }) => LN === levelName);
+
+    const pdSet = Object.values(pdLevelObj).filter((val) =>
+      Number.isInteger(val),
+    );
+    const psSet = Object.values(psLevelObj).filter((val) =>
+      Number.isInteger(val),
+    );
+
+    console.log("pldLevelObj", pdSet);
+    console.log("plsLevelObj", psSet);
+
+    const setsDiff = [];
+    for (let i = 0; i < Math.min(pdSet.length, psSet.length); i++) {
+      setsDiff.push(pdSet[i] - psSet[i]);
+    }
+
     return (
       <Grid className={classes.root}>
         <Table className={classes.table}>
@@ -46,6 +98,37 @@ class CustomTable extends Component {
                 ))}
             </TableRow>
           </TableHead>
+          <TableBody>
+            {pdSet && pdSet.length && psSet && psSet.length ? (
+              <Fragment>
+                <TableRow>
+                  <TableCell className={classes.alignRight}>Demand</TableCell>
+                  {pdSet.map((pld, i) => (
+                    <TableCell key={`${pld}&${i}`}>{pld}</TableCell>
+                  ))}
+                </TableRow>
+                <TableRow>
+                  <TableCell className={classes.alignRight}>Supply</TableCell>
+                  {psSet.map((pld, i) => (
+                    <TableCell key={`${pld}&${i}`}>{pld}</TableCell>
+                  ))}
+                </TableRow>
+              </Fragment>
+            ) : null}
+            <TableRow className={classes.highlight}>
+              <TableCell className={classes.relative}>
+                <SimpleSelectInput
+                  handleChange={this.handleSelectChange}
+                  name="table-select"
+                  value={levelName}
+                  data={levelNames}
+                />
+              </TableCell>
+              {setsDiff.map((num, i) => (
+                <TableCell key={`${num}&${i}`}>{num}</TableCell>
+              ))}
+            </TableRow>
+          </TableBody>
         </Table>
       </Grid>
     );

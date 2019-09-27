@@ -20,7 +20,7 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     fontSize: "calc(10px + 2vmin)",
-    background: "linear-gradient(10deg, #aeadadf5, #ffffff)",
+    background: "linear-gradient(10deg, #2e2e2e, #ffffff)",
   },
   row: {
     width: "100%",
@@ -91,6 +91,7 @@ class App extends Component {
       demand,
       supply,
       errorMessage,
+      planningYears,
     } = this.state;
     const { classes } = this.props;
 
@@ -99,11 +100,26 @@ class App extends Component {
       name: planningName,
     }));
 
-    const {
-      planningName: name,
-      planningDemand: demands,
-      planningSupply: supplies,
-    } = plan && plannings.find(({ _id }) => _id === plan);
+    const { planningName, planningDemand: demands, planningSupply: supplies } =
+      plan && plannings.find(({ _id }) => _id === plan);
+
+    // console.log("supply", supply);
+    // console.log("demand", demand);
+
+    // console.log("supplies", supplies);
+    // console.log("demands", demands);
+    // console.log("planningName", planningName);
+
+    const { planningLevels: PD } =
+      demand &&
+      demands &&
+      demands.find(({ tableName }) => tableName === demand);
+    const { planningLevels: PS } =
+      supply &&
+      supplies &&
+      supplies.find(({ tableName }) => tableName === supply);
+    // console.log("PD", PD);
+    // console.log("PS", PS);
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -146,7 +162,18 @@ class App extends Component {
                 </Typography>
               ) : (
                 <Fragment>
-                  <CustomTable></CustomTable>
+                  {plan && PD && PS ? (
+                    <CustomTable
+                      planningName={planningName}
+                      PD={PD}
+                      PS={PS}
+                    ></CustomTable>
+                  ) : (
+                    <Typography variant="h5" className={classes.notifier}>
+                      For start planning, please select demand and supply
+                      scenarios
+                    </Typography>
+                  )}
                 </Fragment>
               )}
               <Grid className={classes.row}></Grid>
