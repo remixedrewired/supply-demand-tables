@@ -62,17 +62,18 @@ class App extends Component {
   componentDidMount = () => {
     fetchAllPlannings()
       .then((res) => {
-        if (res.length === 0) return this.setState({ loading: false });
+        const { data } = res;
+        if (data.length === 0) return this.setState({ loading: false });
 
         this.setState({
-          plannings: res,
+          plannings: data,
           loading: false,
-          planningsYears: res.map(({ planningName }) =>
+          planningsYears: data.map(({ planningName }) =>
             planningName.match(/\d+/g).map(Number),
           ),
         });
         this.handleChange(selectNames.plan.objName)({
-          target: { value: res[0]._id },
+          target: { value: data[0]._id },
         });
       })
       .catch((err) =>

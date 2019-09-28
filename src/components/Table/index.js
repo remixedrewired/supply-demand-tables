@@ -53,7 +53,7 @@ class CustomTable extends Component {
     const planningYears = keys[0]
       .filter((rawKey) => rawKey.match(/FTE/g))
       .map((key) => key.split("_").join(" "));
-
+    console.log("planningYears", planningYears);
     this.setState({
       levelName: levelNames[0],
       levelNames,
@@ -62,7 +62,6 @@ class CustomTable extends Component {
   };
 
   handleSelectChange = (event) => {
-    console.log(event);
     this.setState({ levelName: event.target.value });
   };
 
@@ -82,6 +81,8 @@ class CustomTable extends Component {
       psLevelObj &&
       Object.values(psLevelObj).filter((val) => Number.isInteger(val));
 
+    console.log("pdLevelObj", pdLevelObj);
+    console.log("pdSet", pdSet);
     const setsDiff = [];
     if (psSet && pdSet) {
       for (let i = 0; i < Math.min(pdSet.length, psSet.length); i++) {

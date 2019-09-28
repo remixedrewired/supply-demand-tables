@@ -1,4 +1,6 @@
-import data from "../data";
+import axios from "axios";
+
+const URL = "http://localhost:5000";
 
 export const selectNames = {
   plan: { showName: "Plan your data", objName: "plan" },
@@ -6,4 +8,4 @@ export const selectNames = {
   supply: { showName: "Supply scenario", objName: "supply" },
 };
 
-export const fetchAllPlannings = () => Promise.resolve(data);
+export const fetchAllPlannings = () => axios.get(`${URL}/planning/all`);
