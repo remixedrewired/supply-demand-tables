@@ -10,29 +10,7 @@ import {
 } from "@material-ui/core";
 
 import SimpleSelectInput from "../SimpleSelectInput";
-
-const styles = (theme) => ({
-  root: {
-    width: "100%",
-    marginTop: theme.spacing(3),
-    overflowX: "auto",
-  },
-  table: {
-    minWidth: 650,
-    minHeight: 170,
-  },
-  relative: {
-    position: "relative",
-  },
-  highlight: {
-    backgroundColor: "lightgoldenrodyellow",
-  },
-  alignRight: {
-    textAlign: "right",
-    color: "rgba(0, 0, 0, 0.54)",
-  },
-});
-
+import styles from "../../styles/table";
 class CustomTable extends Component {
   state = {
     levelName: "",

@@ -1,16 +1,6 @@
 import React, { Component } from "react";
 import { FormControl, MenuItem, Select, withStyles } from "@material-ui/core";
-
-const styles = (theme) => ({
-  select: {
-    width: "75%",
-    position: "absolute",
-    top: "7px",
-  },
-  fontSize: {
-    fontSize: "14px",
-  },
-});
+import styles from "../../styles/simpleSelectInput";
 
 class SimpleSelectInput extends Component {
   render() {
