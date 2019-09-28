@@ -7,19 +7,8 @@ import {
   OutlinedInput,
   withStyles,
 } from "@material-ui/core";
+import styles from "../../styles/selectInput";
 
-const styles = (theme) => ({
-  formControl: {
-    [theme.breakpoints.down("xs")]: {
-      marginRight: "8%",
-      minWidth: 165,
-    },
-    [theme.breakpoints.up("sm")]: {
-      marginRight: "20%",
-      minWidth: 225,
-    },
-  },
-});
 class SelectInput extends Component {
   toHtmlInputNameFormat = (name) =>
     name
