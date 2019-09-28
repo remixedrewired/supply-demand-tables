@@ -6,7 +6,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Paper,
   withStyles,
 } from "@material-ui/core";
 
@@ -42,11 +41,15 @@ class CustomTable extends Component {
   };
 
   componentDidMount = () => {
-    const { PD, PS, planningName } = this.props;
+    const { PD, PS } = this.props;
 
-    const levelNames = PD.map(({ levelName }) => levelName);
+    const levelNames = PD
+      ? PD.map(({ levelName }) => levelName)
+      : PS.map(({ levelName }) => levelName);
 
-    const keys = PD.map((obj) => Object.keys(obj));
+    const keys = PD
+      ? PD.map((obj) => Object.keys(obj))
+      : PS.map((obj) => Object.keys(obj));
     const planningYears = keys[0]
       .filter((rawKey) => rawKey.match(/FTE/g))
       .map((key) => key.split("_").join(" "));
@@ -78,9 +81,6 @@ class CustomTable extends Component {
     const psSet =
       psLevelObj &&
       Object.values(psLevelObj).filter((val) => Number.isInteger(val));
-
-    console.log("pldLevelObj", pdSet);
-    console.log("plsLevelObj", psSet);
 
     const setsDiff = [];
     if (psSet && pdSet) {

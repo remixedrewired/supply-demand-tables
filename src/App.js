@@ -91,7 +91,6 @@ class App extends Component {
       demand,
       supply,
       errorMessage,
-      planningYears,
     } = this.state;
     const { classes } = this.props;
 
@@ -103,13 +102,6 @@ class App extends Component {
     const { planningName, planningDemand: demands, planningSupply: supplies } =
       plan && plannings.find(({ _id }) => _id === plan);
 
-    // console.log("supply", supply);
-    // console.log("demand", demand);
-
-    // console.log("supplies", supplies);
-    // console.log("demands", demands);
-    // console.log("planningName", planningName);
-
     const { planningLevels: PD } =
       demand &&
       demands &&
@@ -118,8 +110,6 @@ class App extends Component {
       supply &&
       supplies &&
       supplies.find(({ tableName }) => tableName === supply);
-    // console.log("PD", PD);
-    // console.log("PS", PS);
 
     return (
       <MuiThemeProvider theme={theme}>
