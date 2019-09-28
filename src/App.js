@@ -40,7 +40,7 @@ const styles = (theme) => ({
 
 class App extends Component {
   state = {
-    loading: false,
+    loading: true,
     plannings: [],
     plan: "",
     demand: "",

@@ -4,7 +4,9 @@ import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 const override = css`
   display: block;
-  margin: 0 auto;
+  position: fixed;
+  top: 20%;
+  left: 50%;
   border-color: white;
 `;
 const Loader = (props) => {
