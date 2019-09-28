@@ -21,4 +21,7 @@ export default (theme) => ({
     marginTop: "15%",
     color: "#424242",
   },
+  button: {
+    margin: "5px 10px 5px 0",
+  },
 });

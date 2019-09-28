@@ -1,6 +1,6 @@
 const Planning = require("../models");
 
-const { OK, NotFound } = require("../../constants");
+const { OK, NotFound, NoContent } = require("../../constants");
 
 module.exports = {
   createOne: async (req, res) => {},
@@ -14,8 +14,17 @@ module.exports = {
 
   getOne: (req, res) => {},
 
-  // TODO - Add Update Logic, include Redis update
   updateOne: (req, res) => {},
 
-  deleteOne: (req, res) => {},
+  deleteOne: (req, res) => {
+    const {
+      params: { id = "" },
+    } = req;
+
+    return Planning.findByIdAndRemove({ _id: id })
+      .then(() => res.status(NoContent.code).send(NoContent.message))
+      .catch((err) =>
+        res.status(NotFound.code).send(err.message || NotFound.message),
+      );
+  },
 };

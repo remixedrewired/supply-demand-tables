@@ -9,3 +9,5 @@ export const selectNames = {
 };
 
 export const fetchAllPlannings = () => axios.get(`${URL}/planning/all`);
+
+export const deletePlanning = (id) => axios.delete(`${URL}/planning/${id}`);
