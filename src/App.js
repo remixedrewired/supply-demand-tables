@@ -10,8 +10,9 @@ import theme from "./theme";
 import Loader from "./components/Loader";
 import SelectInput from "./components/SelectInput";
 import CustomTable from "./components/Table";
+import SimpleButton from "./components/SimpleButton";
 
-import { selectNames, fetchAllPlannings } from "./helpers";
+import { selectNames, fetchAllPlannings, deletePlanning } from "./helpers";
 import styles from "./styles/app";
 
 class App extends Component {
@@ -34,8 +35,25 @@ class App extends Component {
 
     this.setState({ [name]: value });
   };
+  handleModalOpen = () => {};
 
-  componentDidMount = () => {
+  _deletePlanning = (id) => {
+    this.setState({ loading: true, plan: "", demand: "", supply: "" });
+    deletePlanning(id)
+      .then((res) => {
+        const { status } = res;
+        if (status === 204) this._fetchAllPlannings();
+      })
+      .catch((err) =>
+        this.setState({
+          errorMessage: err.message || "Error on deleting planning",
+          snackBarActive: true,
+          loading: false,
+        }),
+      );
+  };
+
+  _fetchAllPlannings = () =>
     fetchAllPlannings()
       .then((res) => {
         const { data } = res;
@@ -58,7 +76,8 @@ class App extends Component {
           loading: false,
         }),
       );
-  };
+
+  componentDidMount = () => this._fetchAllPlannings();
 
   render() {
     const {
@@ -104,6 +123,25 @@ class App extends Component {
                   value={plan}
                   data={plans || [{ name: "No data..." }]}
                 ></SelectInput>
+                {plan ? (
+                  <Grid>
+                    <SimpleButton
+                      name="Create"
+                      className={classes.button}
+                      onClick={() => this.handleModalOpen()}
+                    />
+                    <SimpleButton
+                      name="Delete"
+                      className={classes.button}
+                      onClick={() => this._deletePlanning(plan)}
+                    />
+                  </Grid>
+                ) : (
+                  <SimpleButton
+                    name="Create"
+                    onClick={() => this.handleModalOpen()}
+                  />
+                )}
               </Grid>
               <Grid className={classes.row}>
                 <SelectInput
