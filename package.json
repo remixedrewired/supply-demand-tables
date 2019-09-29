@@ -13,7 +13,7 @@
     "react-spinners": "^0.6.1"
   },
   "scripts": {
-    "prod": "concurrently \"react-scripts start\" \"cd server && npm start\"",
+    "start-dev": "concurrently \"react-scripts start\" \"cd server && npm start\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
