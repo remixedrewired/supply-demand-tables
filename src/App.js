@@ -11,6 +11,7 @@ import Loader from "./components/Loader";
 import SelectInput from "./components/SelectInput";
 import CustomTable from "./components/Table";
 import SimpleButton from "./components/SimpleButton";
+import Snackbar from "./components/SimpleSnackbar";
 
 import { selectNames, fetchAllPlannings, deletePlanning } from "./helpers";
 import styles from "./styles/app";
@@ -24,6 +25,7 @@ class App extends Component {
     supply: "",
     planningYears: [],
     errorMessage: "",
+    snackBarActive: false,
   };
 
   handleChange = (name) => (event) => {
@@ -36,6 +38,9 @@ class App extends Component {
     this.setState({ [name]: value });
   };
   handleModalOpen = () => {};
+
+  handleCloseSnackBar = () =>
+    this.setState({ snackBarActive: false, errorMessage: "" });
 
   _deletePlanning = (id) => {
     this.setState({ loading: true, plan: "", demand: "", supply: "" });
@@ -73,6 +78,7 @@ class App extends Component {
       .catch((err) =>
         this.setState({
           errorMessage: err.message || "Error on fetching tables data",
+          snackBarActive: true,
           loading: false,
         }),
       );
@@ -87,6 +93,7 @@ class App extends Component {
       demand,
       supply,
       errorMessage,
+      snackBarActive,
     } = this.state;
     const { classes } = this.props;
 
@@ -184,6 +191,12 @@ class App extends Component {
               <Grid className={classes.row}></Grid>
             </Grid>
           )}
+          <Snackbar
+            variant={"error"}
+            handleClose={this.handleCloseSnackBar}
+            message={errorMessage}
+            open={snackBarActive}
+          ></Snackbar>
         </Grid>
       </MuiThemeProvider>
     );
