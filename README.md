@@ -6,7 +6,6 @@ Before start:
 npm i
 cd server
 npm i
-
 ```
 
 ## Available Scripts
